@@ -9,30 +9,39 @@ package org.example;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Main {
     public static void main(String[] args) {
 
         List<Integer> list = new ArrayList<>();
         list.add(1);
+        list.add(8);
         list.add(3);
         list.add(2);
+        list.add(7);
+        list.add(9);
         list.add(5);
+        list.add(12);
         list.add(4);
+        list.add(10);
+        list.add(6);
 
-        System.out.println("Filter a list of numbers and only output the even numbers.");
-        list.stream()
+        System.out.println("operations");
+        List<Integer> processedNumbers = list.stream()
                 .filter(element -> element % 2 == 0)
-                .forEach(System.out::println);
-
-        System.out.println("Use 'map' and double each number in the list.");
-        list.stream()
                 .map(element -> element * 2)
-                .forEach(System.out::println);
-
-        System.out.println("Sort the list in ascending order.");
-        list.stream()
                 .sorted()
-                .forEach(System.out::println);
+                .toList();
+        System.out.println(processedNumbers);
+
+        System.out.println("Reduce operation");
+        int reducedList = list.stream()
+                .reduce(0, (x, y) -> x + y);
+        System.out.println(reducedList);
+
+        System.out.println("forEach operation");
+        processedNumbers.forEach(System.out::println);
+
     }
 }
