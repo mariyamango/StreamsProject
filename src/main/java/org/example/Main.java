@@ -1,33 +1,18 @@
 package org.example;
 
-//Step 1: Filter a list of numbers and only output the even numbers.
-//Step 2: Use 'map' and double each number in the list.
-//Step 3: Sort the list in ascending order.
-//Step 4: Perform a 'reduce' operation to calculate the sum of all numbers in the list.
-//Step 5: Use 'forEach' and output each processed number.
-//Step 6: Collect the processed numbers into a new list using 'collect'.
-
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
-        List<Integer> list = new ArrayList<>();
-        list.add(1);
-        list.add(8);
-        list.add(3);
-        list.add(2);
-        list.add(7);
-        list.add(9);
-        list.add(5);
-        list.add(12);
-        list.add(4);
-        list.add(10);
-        list.add(6);
+        List<Integer> list = List.of(1,8,3,2,7,9,5,12,4,10,6);
 
-        System.out.println("operations");
+        System.out.println("Operations: ");
         List<Integer> processedNumbers = list.stream()
                 .filter(element -> element % 2 == 0)
                 .map(element -> element * 2)
@@ -35,13 +20,41 @@ public class Main {
                 .toList();
         System.out.println(processedNumbers);
 
-        System.out.println("Reduce operation");
+        System.out.println("\nReduce operation: ");
         int reducedList = list.stream()
                 .reduce(0, (x, y) -> x + y);
         System.out.println(reducedList);
 
-        System.out.println("forEach operation");
+        System.out.println("\nforEach operation: ");
         processedNumbers.forEach(System.out::println);
 
+        //File processing
+        Path pathToFile = Path.of("students.csv");
+        System.out.println("\nPrinting out the file:");
+        Files.lines(pathToFile).forEach(System.out::println);
+
+        Stream<String> lines = Files.lines(pathToFile)
+                        .skip(1);
+
+        System.out.println("\nConverting to Student class:");
+        List<Student> students = lines.map(line -> convertToStudent(line)).collect(Collectors.toList());
+        students.forEach(System.out::println);
+
+        System.out.println("\nThe list of Students is processed:");
+        List<Student> beautifiedListOfStudents = students.stream()
+                .filter(student -> student != null)
+                .distinct()
+                .toList();
+        beautifiedListOfStudents.stream().forEach(System.out::println);
+    }
+
+    public static Student convertToStudent (String line){
+        String[] parts = line.split(",");
+        if (parts.length != 4) return null;
+        int id = Integer.parseInt(parts[0].trim());
+        String name = parts[1].trim();
+        String postalCode = parts[2].trim();
+        int age = Integer.parseInt(parts[3].trim());
+        return new Student(id, name, postalCode, age);
     }
 }
